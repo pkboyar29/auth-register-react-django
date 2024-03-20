@@ -15,6 +15,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/personal-account" element={<PersonalAccountPage />}></Route>
         <Route path="/" element={<Navigate to="/auth" />} />
+        {/* comment */}
       </Routes>
     </div>
   );
