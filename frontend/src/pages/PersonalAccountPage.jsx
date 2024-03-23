@@ -38,12 +38,12 @@ function PersonalAccountPage() {
 		setTheme(newTheme)
 
 		// отправить http запрос на изменении самой темы у текущего пользователя
-		fetch('http://auth-register-backend/index.php/user/changeTheme/' + Cookies.get('login'), {
+		fetch('http://127.0.0.1:8000/api/user/' + Cookies.get('login') + '/changeTheme', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
+				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ Theme: newTheme })
+			body: JSON.stringify({ theme: newTheme })
 		})
 			.then(response => response.json())
 			.then(response => console.log(response))
