@@ -5,11 +5,11 @@ from django.db import models
 class User(models.Model):
    login = models.CharField(max_length=20, unique=True)
    first_name = models.CharField(max_length=16)
-   last_lame = models.CharField(max_length=16)
+   last_name = models.CharField(max_length=16)
    email = models.EmailField(max_length=100)
    password = models.CharField(max_length=255)
-   AGE_LIMIT_CHOICES = [("18", "18+"), ("not18", "Under 18")]
-   age_limit = models.CharField(max_length=5, choices=AGE_LIMIT_CHOICES)
+   AGE_LIMIT_CHOICES = [("18", "Over 18"), ("not18", "Under 18")]
+   age_limit = models.CharField(max_length=10, choices=AGE_LIMIT_CHOICES)
    GENDER_CHOICES = [("male", "Male"), ("female", "Female")]
    gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
    accept_rules = models.BooleanField()

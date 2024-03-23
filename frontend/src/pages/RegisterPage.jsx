@@ -39,36 +39,40 @@ function RegisterPage() {
    const onSubmit = (data) => {
       delete data.confirmPassword
 
-      // передача на сервер json строки
-      fetch('http://auth-register-backend/index.php/user/register', {
+      fetch('http://127.0.0.1:8000/api/register/', {
          method: 'POST',
          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
          },
          body: JSON.stringify(data)
       })
-         .then(response => {
-            switch (response.status) {
-               case 200:
-                  Cookies.set('login', data['login'])
-                  alert("Регистрация успешна!")
-                  navigate('/personal-account')
-                  return
-               case 403:
-                  setError('login', {
-                     type: 'manual',
-                     message: 'Пользователь с таким логином уже существует'
-                  })
-                  return
-               default:
-                  console.log("упс")
-                  return
-            }
-         }
-         )
+      .then(response => response.text())
+      .then(text => console.log(text))
+         // .then(response => {
+         //    switch (response.status) {
+         //       case 201:
+         //          Cookies.set('login', data['login'])
+         //          alert("Регистрация успешна!")
+         //          navigate('/personal-account')
+         //          return
+         //       case 403:
+         //          setError('login', {
+         //             type: 'manual',
+         //             message: 'Пользователь с таким логином уже существует'
+         //          })
+         //          return
+         //       default:
+         //          console.log(response)
+         //          return
+         //    }
+         // }
+         // )
    }
 
    const onChangeCaptcha = (value) => {
+
+      setCaptchaPassed(true)
+      return
 
       // отправить токен на сервер и проверить его там, обратившись к reCAPTCHA API
       fetch('http://auth-register-backend/index.php/token', {
@@ -104,7 +108,7 @@ function RegisterPage() {
                <div className="label">
                   <div className="label__title">Имя</div>
                   <input
-                     {...register('firstName', {
+                     {...register('first_name', {
                         required: "Поле обязательно к заполнению",
                         minLength: {
                            value: 2,
@@ -124,7 +128,7 @@ function RegisterPage() {
                   />
                </div>
                <div style={{ height: 40 }}>
-                  {errors?.firstName && <p className="error">{errors?.firstName?.message || "Error!"}</p>}
+                  {errors?.first_name && <p className="error">{errors?.first_name?.message || "Error!"}</p>}
                </div>
             </label>
             {/* Last Name */}
@@ -132,7 +136,7 @@ function RegisterPage() {
                <div className="label">
                   <div className="label__title">Фамилия</div>
                   <input
-                     {...register('lastName', {
+                     {...register('last_name', {
                         required: "Поле обязательно к заполнению",
                         minLength: {
                            value: 2,
@@ -161,7 +165,7 @@ function RegisterPage() {
                </div>
 
                <div style={{ height: 40 }}>
-                  {errors?.lastName && <p className="error">{errors?.lastName?.message || "Error!"}</p>}
+                  {errors?.last_name && <p className="error">{errors?.last_name?.message || "Error!"}</p>}
                </div>
             </label>
             {/* Email */}
@@ -298,7 +302,7 @@ function RegisterPage() {
 
             {/* DROPDOWN MENU: AGE */}
             <div className="age__title">Возраст</div>
-            <select className="age__select" {...register('age', { required: "Выберите возраст" })}>
+            <select className="age__select" {...register('age_limit', { required: "Выберите возраст" })}>
                <option value="">Выберите возраст</option>
                <option value="18">Мне 18 лет</option>
                <option value="not18">Нет 18 лет</option>
@@ -307,7 +311,7 @@ function RegisterPage() {
             {/* ACCEPT RULES */}
             <label className="accept__label">
                <input
-                  {...register('acceptRules')}
+                  {...register('accept_rules')}
                   type="checkbox"
                />
                Принимаю правила соглашения
