@@ -46,27 +46,25 @@ function RegisterPage() {
          },
          body: JSON.stringify(data)
       })
-      .then(response => response.text())
-      .then(text => console.log(text))
-         // .then(response => {
-         //    switch (response.status) {
-         //       case 201:
-         //          Cookies.set('login', data['login'])
-         //          alert("Регистрация успешна!")
-         //          navigate('/personal-account')
-         //          return
-         //       case 403:
-         //          setError('login', {
-         //             type: 'manual',
-         //             message: 'Пользователь с таким логином уже существует'
-         //          })
-         //          return
-         //       default:
-         //          console.log(response)
-         //          return
-         //    }
-         // }
-         // )
+         .then(response => {
+            switch (response.status) {
+               case 201:
+                  Cookies.set('login', data['login'])
+                  alert("Регистрация успешна!")
+                  navigate('/personal-account')
+                  return
+               case 403:
+                  setError('login', {
+                     type: 'manual',
+                     message: 'Пользователь с таким логином уже существует'
+                  })
+                  return
+               default:
+                  console.log(response.text())
+                  return
+            }
+         }
+         )
    }
 
    const onChangeCaptcha = (value) => {
