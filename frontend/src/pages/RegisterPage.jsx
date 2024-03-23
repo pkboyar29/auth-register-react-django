@@ -69,24 +69,20 @@ function RegisterPage() {
 
    const onChangeCaptcha = (value) => {
 
-      setCaptchaPassed(true)
-      return
-
-      // отправить токен на сервер и проверить его там, обратившись к reCAPTCHA API
-      fetch('http://auth-register-backend/index.php/token', {
+      fetch('http://127.0.0.1:8000/api/checkToken', {
          method: 'POST',
          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
          },
-         body: JSON.stringify(value)
+         body: JSON.stringify({ 'token': value })
       })
          .then(response => {
             switch (response.status) {
                case 200:
                   setCaptchaPassed(true)
                   return
-               case 400:
-                  console.log("все плохо")
+               case 500:
+                  setCaptchaPassed(false)
                   return
                default:
                   return

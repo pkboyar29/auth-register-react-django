@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer
 from .models import User
+from django.conf import settings
+import requests
 
 class UserRegistrationView(APIView):
    def post(self, request):
@@ -48,3 +50,25 @@ class UserChangeTheme(APIView):
       user.save()
 
       return Response('Theme changed successfully', status=status.HTTP_200_OK)
+   
+class UserCheckRecaptchaToken(APIView):
+   def post(self, request):
+      token = request.data.get('token')
+      secretKey = settings.RECAPTCHA_SECRET_KEY
+      verifyUrl = "https://www.google.com/recaptcha/api/siteverify"
+
+      data = {
+         'secret': secretKey,
+         'response': token
+      }
+
+      response = requests.post(verifyUrl, data=data)
+      
+      if response.status_code == 200:
+         result = response.json()
+         if result['success']:
+            return Response("Token is valid", status=status.HTTP_200_OK)
+         else:
+            return Response("Token isn't valid", status=status.HTTP_404_NOT_FOUND)
+      else:
+         return Response("Error by verifying reCAPTCHA token", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
