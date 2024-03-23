@@ -130,4 +130,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-RECAPTCHA_SECRET_KEY= "6LdxW4gpAAAAAADaJUivpSImYHE2gfcPJWPlR7MI"
+RECAPTCHA_SECRET_KEY = "6LdxW4gpAAAAAADaJUivpSImYHE2gfcPJWPlR7MI"
+
+PASSWORD_HASHERS = [
+   'django.contrib.auth.hashers.Argon2PasswordHasher'
+]

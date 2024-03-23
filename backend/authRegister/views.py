@@ -5,9 +5,12 @@ from .serializers import UserSerializer
 from .models import User
 from django.conf import settings
 import requests
+from django.contrib.auth.hashers import make_password, check_password
 
 class UserRegistrationView(APIView):
    def post(self, request):
+
+      request.data['password'] = make_password(request.data['password'])
 
       if User.objects.filter(login=request.data.get('login')).exists():
          return Response("User with this login already exists", status=status.HTTP_403_FORBIDDEN)
@@ -25,7 +28,7 @@ class UserAuthView(APIView):
          return Response("User with this login doesn't exist", status=status.HTTP_404_NOT_FOUND)
       
       user = User.objects.get(login=request.data.get('login'))
-      if user.password == request.data.get('password'):
+      if check_password(request.data.get('password'), user.password):
          return Response("Successful", status=status.HTTP_200_OK)
       else:
          return Response("Passwords don't match", status=status.HTTP_401_UNAUTHORIZED)
