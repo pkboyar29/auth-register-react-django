@@ -13,13 +13,13 @@ function PersonalAccountPage() {
 
 		// тут уже будет проверять не пропс loggedInUser, а то, что находится в cookie
 		if (Cookies.get('login') !== undefined) {
-			fetch('http://auth-register-backend/index.php/user/userinfo/' + Cookies.get('login'), {
+			fetch('http://127.0.0.1:8000/api/user/' + Cookies.get('login'), {
 				method: 'GET'
 			})
 				.then(response => response.json())
 				.then(responseJson => {
-					setFirstName(responseJson['FirstName'])
-					setTheme(responseJson['Theme'])
+					setFirstName(responseJson['first-name'])
+					setTheme(responseJson['theme'])
 				})
 		}
 	}, [])

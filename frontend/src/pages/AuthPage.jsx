@@ -30,7 +30,7 @@ function AuthPage() {
    const recaptchaRef = useRef()
 
    const onSubmit = (data) => {
-      fetch('http://127.0.0.1:8000/api/auth/', {
+      fetch('http://127.0.0.1:8000/api/auth', {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json'

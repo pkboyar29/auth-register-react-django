@@ -27,3 +27,16 @@ class UserAuthView(APIView):
          return Response("Successful", status=status.HTTP_200_OK)
       else:
          return Response("Passwords don't match", status=status.HTTP_401_UNAUTHORIZED)
+
+class UserDetailView(APIView):
+   def get(self, request, login):
+      
+      try:
+         user = User.objects.get(login=login)
+         data = { # это словарь python, однако при передачи его в Response, DRF его преобразует в json строку
+            'theme': user.theme,
+            'first-name': user.first_name
+         }
+         return Response(data, status=status.HTTP_200_OK)
+      except User.DoesNotExist:
+         return Response('User not found', status=status.HTTP_404_NOT_FOUND)
