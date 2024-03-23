@@ -29,25 +29,24 @@ function AuthPage() {
 
    const recaptchaRef = useRef()
 
-   // функция обратного вызова (та функция, которую можно передать как параметр в другую функцию)
    const onSubmit = (data) => {
-      // передача на сервер json строки
-      fetch('http://auth-register-backend/index.php/user/auth', {
+      fetch('http://127.0.0.1:8000/api/auth/', {
          method: 'POST',
          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/json'
          },
          body: JSON.stringify(data)
       })
+      // .then(response => response.text())
+      // .then(text => console.log(text))
          .then(response => {
-            // проверяем код состояния ответа (http reponse code status)
             switch (response.status) {
                case 200:
-                  const loginFromInput = data['login'] // получаем правильный, подтвержденный логин из input
+                  const loginFromInput = data['login']
                   Cookies.set('login', loginFromInput)
                   navigate('/personal-account')
                   return
-               case 403:
+               case 401:
                   setError('password', {
                      type: 'manual',
                      message: 'Неверный пароль'
@@ -68,6 +67,9 @@ function AuthPage() {
    }
 
    const onChangeCaptcha = (value) => {
+
+      setCaptchaPassed(true)
+      return
 
       // отправить токен на сервер и проверить его там, обратившись к reCAPTCHA API
       fetch('http://auth-register-backend/index.php/token', {
