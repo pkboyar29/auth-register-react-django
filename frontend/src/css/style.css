@@ -58,8 +58,17 @@ body {
 }
 
 .show {
-  /* height: 100%; */
+  position: absolute;
+  top: 1px;
+  right: 10px;
+  width: 21px;
+  height: 21px;
   cursor: pointer;
+
+}
+
+.password__field {
+  position: relative;
 }
 
 .password__input {
@@ -210,7 +219,7 @@ input {
   text-decoration: none;
   font-size: 18px;
   transition: all .3s;
-} 
+}
 
 .header-app__link:hover {
   color: #7e5f5f;
@@ -224,7 +233,8 @@ input {
   margin-top: 50px;
 }
 
-.home-page__table, .home-page__statistics {
+.home-page__table,
+.home-page__statistics {
   display: flex;
   justify-content: center;
   margin-top: 50px;

@@ -12,14 +12,34 @@ function PersonalAccountPage() {
 	useEffect(() => {
 
 		// тут уже будет проверять не пропс loggedInUser, а то, что находится в cookie
-		if (Cookies.get('login') !== undefined) {
-			fetch('http://127.0.0.1:8000/api/user/' + Cookies.get('login'), {
-				method: 'GET'
+		if (Cookies.get('refresh_token') !== undefined && Cookies.get('access_token') !== undefined) {
+			fetch('http://127.0.0.1:8000/api/user/', {
+				method: 'GET',
+				headers: {
+					'Authorization': `Bearer ${Cookies.get('access_token')}`
+				}
 			})
-				.then(response => response.json())
-				.then(responseJson => {
-					setFirstName(responseJson['first-name'])
-					setTheme(responseJson['theme'])
+				.then(response => {
+					switch (response.status) {
+						case 200:
+							return response.json()
+								.then(responseJson => {
+									setFirstName(responseJson['first-name'])
+									setTheme(responseJson['theme'])
+								})
+						case 401:
+							return response.json()
+								.then(responseJson => {
+									console.log(responseJson)
+									if (responseJson.code = 'token_not_valid') {
+										// тут обновляем наш access token
+										// можно просто вывести в консольке для подтверждения что условие рабочее
+									}
+								})
+						default:
+							return response.text()
+								.then(responseText => console.log(responseText))
+					}
 				})
 		}
 	}, [])
@@ -27,33 +47,47 @@ function PersonalAccountPage() {
 	const onLogOutHandle = () => {
 		setFirstName('')
 		setTheme('light')
-		Cookies.remove('login')
+		Cookies.remove('access_token')
+		Cookies.remove('refresh_token')
 		navigate('/auth')
 	}
 
 	const handleChangeTheme = () => {
 
-		// Определяем новое значение темы
 		const newTheme = theme === 'light' ? 'dark' : 'light';
 		setTheme(newTheme)
 
-		// отправить http запрос на изменении самой темы у текущего пользователя
-		fetch('http://127.0.0.1:8000/api/user/' + Cookies.get('login') + '/changeTheme', {
+		fetch('http://127.0.0.1:8000/api/user' + '/changeTheme', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${Cookies.get('access_token')}`
 			},
 			body: JSON.stringify({ theme: newTheme })
 		})
-			.then(response => response.json())
-			.then(response => console.log(response))
+			.then(response => {
+				switch (response.status) {
+					case 401:
+						return response.json()
+							.then(responseJson => {
+								console.log(responseJson)
+								if (responseJson.code = 'token_not_valid') {
+									// тут обновляем наш access token
+									// можно просто вывести в консольке для подтверждения что условие рабочее
+								}
+							})
+					default:
+						return response.text()
+							.then(responseText => console.log(responseText))
+				}
+			})
 	}
 
 	const changeThemeButtonText = theme === 'light' ? 'Светлая тема' : 'Темная тема';
 
 	return (
 		<div className={theme === 'dark' ? 'darkBackground' : ''}>
-			{Cookies.get('login') !== undefined ? ( // вот тут теперь будет проверять то, что в cookie
+			{Cookies.get('access_token') !== undefined && Cookies.get('refresh_token') !== undefined ? (
 				<>
 					<div className={"header " + (theme === 'dark' ? "darkHeader" : '')}>
 						<div onClick={handleChangeTheme} className={"header__theme " + (theme === 'dark' ? "darkButton" : '')}>{changeThemeButtonText}</div>

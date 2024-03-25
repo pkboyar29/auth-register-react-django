@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import User
+from .models import CustomUser
 
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
    class Meta:
-      model = User # модель, которую следует сериализовать
+      model = CustomUser # модель, которую следует сериализовать
       fields = '__all__' # все поля модели будут включены в сериализатор

@@ -49,10 +49,14 @@ function RegisterPage() {
          .then(response => {
             switch (response.status) {
                case 201:
-                  Cookies.set('login', data['login'])
-                  alert("Регистрация успешна!")
-                  navigate('/personal-account')
-                  return
+                  return response.json()
+                     .then(data => {
+                        const { access_token, refresh_token } = data
+                        Cookies.set('access_token', access_token)
+                        Cookies.set('refresh_token', refresh_token)
+                        alert("Регистрация успешна!")
+                        navigate('/personal-account')
+                     })
                case 403:
                   setError('login', {
                      type: 'manual',
@@ -69,7 +73,7 @@ function RegisterPage() {
 
    const onChangeCaptcha = (value) => {
 
-      fetch('http://127.0.0.1:8000/api/checkToken', {
+      fetch('http://127.0.0.1:8000/api/checkCaptchaToken', {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json'
@@ -219,22 +223,26 @@ function RegisterPage() {
             <label>
                <div className="password__input">
                   <div>Пароль</div>
-                  <input
-                     {...register('password', {
-                        required: "Поле обязательно к заполнению",
-                        minLength: {
-                           value: 8,
-                           message: "Минимальная длина пароля: 8 символов"
-                        },
-                        pattern: {
-                           value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
-                           message: "Пароль должен содержать по крайней мере одну прописную букву, одну строчную букву, одну цифру и один специальный символ (!@#$%^&*)"
-                        }
-                     })}
-                     type={showPassword ? 'text' : 'password'}
-                     autoComplete="off"
-                  />
-                  <img className="show" onClick={togglePasswordVisibility} src={showPassword ? "/img/eye.svg" : "/img/eye-off.svg"} />
+
+                  <div className="password__field">
+                     <input
+                        {...register('password', {
+                           required: "Поле обязательно к заполнению",
+                           minLength: {
+                              value: 8,
+                              message: "Минимальная длина пароля: 8 символов"
+                           },
+                           pattern: {
+                              value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/,
+                              message: "Пароль должен содержать по крайней мере одну прописную букву, одну строчную букву, одну цифру и один специальный символ (!@#$%^&*)"
+                           }
+                        })}
+                        type={showPassword ? 'text' : 'password'}
+                        autoComplete="off"
+                     />
+                     <img className="show" onClick={togglePasswordVisibility} src={showPassword ? "/img/eye.svg" : "/img/eye-off.svg"} />
+                  </div>
+
                </div>
 
                <div style={{ height: 40 }}>
@@ -247,21 +255,23 @@ function RegisterPage() {
                <div className="password__input">
                   <div>Подтвердите пароль</div>
 
-                  <input
-                     {...register('confirmPassword', {
-                        required: "Поле обязательно к заполнению",
-                        validate: {
-                           matchesPreviousPassword: (value) => {
-                              const { password } = getValues();
-                              return password === value || "Пароли не совпадают";
+                  <div className="password__field">
+                     <input
+                        {...register('confirmPassword', {
+                           required: "Поле обязательно к заполнению",
+                           validate: {
+                              matchesPreviousPassword: (value) => {
+                                 const { password } = getValues();
+                                 return password === value || "Пароли не совпадают";
+                              }
                            }
-                        }
-                     })}
-                     type={showConfirmPassword ? 'text' : 'password'}
-                     autoComplete="off"
-                  />
+                        })}
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        autoComplete="off"
+                     />
 
-                  <img className="show" onClick={toggleConfirmPasswordVisibility} src={showConfirmPassword ? "/img/eye.svg" : "/img/eye-off.svg"} />
+                     <img className="show" onClick={toggleConfirmPasswordVisibility} src={showConfirmPassword ? "/img/eye.svg" : "/img/eye-off.svg"} />
+                  </div>
 
                </div>
 
