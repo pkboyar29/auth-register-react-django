@@ -58,7 +58,7 @@ function RegisterPage() {
                         navigate('/personal-account')
                      })
                case 403:
-                  setError('login', {
+                  setError('username', {
                      type: 'manual',
                      message: 'Пользователь с таким логином уже существует'
                   })
@@ -189,12 +189,12 @@ function RegisterPage() {
                </div>
             </label>
 
-            {/* Login */}
+            {/* Username */}
             <label>
                <div className="label">
                   <div className="label__title">Логин</div>
                   <input
-                     {...register('login', {
+                     {...register('username', {
                         required: "Поле обязательно к заполнению",
                         minLength: {
                            value: 6,
@@ -215,7 +215,7 @@ function RegisterPage() {
                </div>
 
                <div style={{ height: 40 }}>
-                  {errors?.login && <p className="error">{errors?.login?.message || "Error!"}</p>}
+                  {errors?.username && <p className="error">{errors?.username?.message || "Error!"}</p>}
                </div>
             </label>
 

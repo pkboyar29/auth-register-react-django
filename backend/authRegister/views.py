@@ -35,10 +35,10 @@ class UserRegistrationView(APIView):
 class UserAuthView(APIView):
    def post(self, request):
 
-      if CustomUser.objects.filter(username=request.data.get('login')).count() == 0:
-         return Response("User with this login doesn't exist", status=status.HTTP_404_NOT_FOUND)
+      if CustomUser.objects.filter(username=request.data.get('username')).count() == 0:
+         return Response("User with this username doesn't exist", status=status.HTTP_404_NOT_FOUND)
       
-      user = CustomUser.objects.get(username=request.data.get('login'))
+      user = CustomUser.objects.get(username=request.data.get('username'))
       if check_password(request.data.get('password'), user.password):
 
          refresh_token = RefreshToken.for_user(user)
@@ -91,9 +91,3 @@ class UserCheckRecaptchaTokenView(APIView):
             return Response("Token isn't valid", status=status.HTTP_404_NOT_FOUND)
       else:
          return Response("Error by verifying reCAPTCHA token", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-      
-class TestView(APIView):
-   def get(self, request):
-      users = CustomUser.objects.all()
-      serializer = CustomUserSerializer(users, many=True)
-      return Response(serializer.data)

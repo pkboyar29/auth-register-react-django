@@ -56,7 +56,7 @@ function AuthPage() {
                   setCaptchaPassed(false)
                   return
                case 404:
-                  setError('login', {
+                  setError('username', {
                      type: 'manual',
                      message: 'Пользователя с таким логином не существует'
                   })
@@ -98,12 +98,12 @@ function AuthPage() {
 
             <div className="form__title">Форма авторизации</div>
 
-            {/* Login */}
+            {/* Username */}
             <label>
                <div className="label">
                   <div className="label__title">Логин</div>
                   <input
-                     {...register('login', {
+                     {...register('username', {
                         required: 'Логин не указан'
                      })}
                      type="text"
@@ -113,7 +113,7 @@ function AuthPage() {
                </div>
 
                <div id="label_login" style={{ height: 40 }}>
-                  {errors?.login && <p className="error">{errors?.login?.message || "Error!"}</p>}
+                  {errors?.username && <p className="error">{errors?.username?.message || "Error!"}</p>}
                </div>
             </label>
 

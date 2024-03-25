@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import { jwtDecode } from "jwt-decode";
 
 function PersonalAccountPage() {
 
@@ -9,10 +10,43 @@ function PersonalAccountPage() {
 
 	const navigate = useNavigate()
 
-	useEffect(() => {
+	function updateAccessToken() {
+		const accessToken = Cookies.get('access_token')
+		const refreshToken = Cookies.get('refresh_token')
 
-		// тут уже будет проверять не пропс loggedInUser, а то, что находится в cookie
+		// проверка на то, что access токен истек или не истек
+		const decodedAccessToken = jwtDecode(accessToken);
+		const expirationTimestamp = decodedAccessToken.exp; // Дата истечения в формате timestamp (в секундах)
+		console.log(expirationTimestamp)
+
+		const currentTimestamp = Math.floor(Date.now() / 1000); // Текущая дата в формате timestamp
+		console.log(currentTimestamp)
+
+		if (currentTimestamp > expirationTimestamp) {
+			fetch('http://127.0.0.1:8000/api/token/refresh/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					'refresh': refreshToken
+				})
+			})
+				.then(response => response.json())
+				.then(data => {
+					Cookies.set('access_token', data['access'])
+					console.log('изменилось')
+				})
+		}
+	}
+
+	useEffect(() => {
 		if (Cookies.get('refresh_token') !== undefined && Cookies.get('access_token') !== undefined) {
+
+			// сначала проверка на то, не истек ли access токен
+			updateAccessToken()
+
+			// выполнение основного запроса к API
 			fetch('http://127.0.0.1:8000/api/user/', {
 				method: 'GET',
 				headers: {
@@ -29,13 +63,7 @@ function PersonalAccountPage() {
 								})
 						case 401:
 							return response.json()
-								.then(responseJson => {
-									console.log(responseJson)
-									if (responseJson.code = 'token_not_valid') {
-										// тут обновляем наш access token
-										// можно просто вывести в консольке для подтверждения что условие рабочее
-									}
-								})
+								.then(responseJson => console.log(responseJson))
 						default:
 							return response.text()
 								.then(responseText => console.log(responseText))
@@ -54,8 +82,10 @@ function PersonalAccountPage() {
 
 	const handleChangeTheme = () => {
 
+		// сначала проверка на то, не истек ли access токен
+		updateAccessToken()
+
 		const newTheme = theme === 'light' ? 'dark' : 'light';
-		setTheme(newTheme)
 
 		fetch('http://127.0.0.1:8000/api/user' + '/changeTheme', {
 			method: 'POST',
@@ -67,15 +97,12 @@ function PersonalAccountPage() {
 		})
 			.then(response => {
 				switch (response.status) {
+					case 200:
+						setTheme(newTheme)
+						return
 					case 401:
 						return response.json()
-							.then(responseJson => {
-								console.log(responseJson)
-								if (responseJson.code = 'token_not_valid') {
-									// тут обновляем наш access token
-									// можно просто вывести в консольке для подтверждения что условие рабочее
-								}
-							})
+							.then(responseJson => console.log(responseJson))
 					default:
 						return response.text()
 							.then(responseText => console.log(responseText))

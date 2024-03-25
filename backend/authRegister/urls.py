@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserRegistrationView, UserAuthView, UserDetailView, UserChangeThemeView, UserCheckRecaptchaTokenView, TestView
+from .views import UserRegistrationView, UserAuthView, UserDetailView, UserChangeThemeView, UserCheckRecaptchaTokenView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
@@ -8,6 +8,5 @@ urlpatterns = [
    path('user/', UserDetailView.as_view(), name='get-user-theme-firstName'),
    path('user/changeTheme', UserChangeThemeView.as_view(), name='change-userTheme'),
    path('checkCaptchaToken', UserCheckRecaptchaTokenView.as_view(), name='check-recaptchaToken'),
-   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-   path('test/', TestView.as_view(), name='test')
+   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ]
