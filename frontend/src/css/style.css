@@ -45,7 +45,6 @@ body {
   margin-bottom: 15px;
 }
 
-
 /* FORM-REGISTER AND FORM-AUTH */
 
 .label {
@@ -64,7 +63,6 @@ body {
   width: 21px;
   height: 21px;
   cursor: pointer;
-
 }
 
 .password__field {
@@ -154,7 +152,7 @@ input {
   cursor: pointer;
   padding: 5px;
   background-color: bisque;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .header__exit:hover {
@@ -165,13 +163,12 @@ input {
   cursor: pointer;
   padding: 5px;
   background-color: bisque;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .header__theme:hover {
   background-color: rgb(202, 130, 42);
 }
-
 
 .text {
   display: flex;
@@ -218,11 +215,17 @@ input {
   color: #000;
   text-decoration: none;
   font-size: 18px;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .header-app__link:hover {
   color: #7e5f5f;
+}
+
+/* OTHERS */
+
+.captcha {
+  margin: 0 0 20px 0;
 }
 
 /* HomePage */
@@ -253,8 +256,29 @@ input {
   flex-direction: column;
 }
 
-/* OTHERS */
+.userData {
+  margin-top: 20px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-.captcha {
-  margin: 0 0 20px 0;
+.users {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.users__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user {
+  max-width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
 }
